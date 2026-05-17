@@ -2,13 +2,7 @@ import { cookies } from 'next/headers';
 import crypto from 'crypto';
 
 function getSessionSecret(): string {
-  const secret = process.env.SESSION_SECRET;
-  if (secret) return secret;
-  if (process.env.NODE_ENV === 'production') {
-    console.warn('SESSION_SECRET not set. Using auto-generated random secret. Sessions will be invalidated on restart. Set SESSION_SECRET in your environment variables for persistent sessions.');
-    return crypto.randomBytes(32).toString('hex');
-  }
-  return 'dev-secret-fixed-for-testing';
+  return process.env.SESSION_SECRET || 'dev-secret-fixed-for-testing';
 }
 
 function sign(payload: string) {

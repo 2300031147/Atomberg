@@ -22,7 +22,15 @@ export default function LoginPage() {
     });
 
     if (res.ok) {
-      window.location.href = '/dashboard';
+      const data = await res.json();
+      const role = data.role;
+      if (role === 'ADMIN') {
+        window.location.href = '/admin/dashboard';
+      } else if (role === 'MANAGER') {
+        window.location.href = '/manager/team';
+      } else {
+        window.location.href = '/dashboard';
+      }
     } else {
       setError('Invalid email or password');
     }

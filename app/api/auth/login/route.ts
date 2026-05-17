@@ -1,7 +1,15 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { readDb } from '@/lib/db';
-import { setSession } from '@/lib/auth';
+import { SESSION_MAX_AGE_SECONDS } from '@/lib/constants';
+
+function getSessionSecret(): string {
+  return process.env.SESSION_SECRET || 'dev-secret-fixed-for-testing';
+}
+
+function sign(payload: string) {
+  return crypto.createHmac('sha256', getSessionSecret()).update(payload).digest('base64');
+}
 
 export async function POST(req: Request) {
   try {
@@ -18,8 +26,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
     
-    setSession(user);
-    return NextResponse.json({ success: true, role: user.role });
+    const payload = JSON.stringify({ id: user.id, name: user.name, email: user.email, role: user.role });
+    const payloadBase64 = Buffer.from(payload).toString('base64');
+    const signature = sign(payloadBase64);
+    const sessionValue = `${payloadBase64}.${signature}`;
+    
+    const response = NextResponse.json({ success: true, role: user.role });
+    response.cookies.set('session', sessionValue, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: SESSION_MAX_AGE_SECONDS,
+    });
+    return response;
   } catch (error: any) {
     console.error('Login error:', error);
     return NextResponse.json({ error: 'Internal server error', details: error?.message }, { status: 500 });
