@@ -15,10 +15,14 @@ export default function CheckInsDashboard() {
         fetch('/api/goals'),
         fetch('/api/checkins')
       ]);
-      const goalsData = await goalsRes.json();
-      const checkinsData = await checkinsRes.json();
-      setGoals(goalsData.filter((g: any) => g.status === 'APPROVED'));
-      setCheckIns(checkinsData);
+      if (goalsRes.ok) {
+        const goalsData = await goalsRes.json();
+        if (Array.isArray(goalsData)) setGoals(goalsData.filter((g: any) => g.status === 'APPROVED'));
+      }
+      if (checkinsRes.ok) {
+        const checkinsData = await checkinsRes.json();
+        if (Array.isArray(checkinsData)) setCheckIns(checkinsData);
+      }
       setLoading(false);
     }
     fetchData();

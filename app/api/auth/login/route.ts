@@ -1,15 +1,5 @@
-import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { readDb } from '@/lib/db';
-import { SESSION_MAX_AGE_SECONDS } from '@/lib/constants';
-
-function getSessionSecret(): string {
-  return process.env.SESSION_SECRET || 'dev-secret-fixed-for-testing';
-}
-
-function sign(payload: string) {
-  return crypto.createHmac('sha256', getSessionSecret()).update(payload).digest('base64');
-}
 
 export async function POST(req: Request) {
   try {
@@ -23,23 +13,30 @@ export async function POST(req: Request) {
     
     const user = db.users.find(u => u.email.toLowerCase() === safeEmail && u.password === hashedPassword);
     if (!user) {
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+      return new Response(JSON.stringify({ error: 'Invalid credentials' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
     
     const payload = JSON.stringify({ id: user.id, name: user.name, email: user.email, role: user.role });
     const payloadBase64 = Buffer.from(payload).toString('base64');
-    const signature = sign(payloadBase64);
+    const secret = process.env.SESSION_SECRET || 'dev-secret-fixed-for-testing';
+    const signature = crypto.createHmac('sha256', secret).update(payloadBase64).digest('base64');
     const sessionValue = `${payloadBase64}.${signature}`;
     
-    const response = NextResponse.json({ success: true, role: user.role });
-    response.cookies.set('session', sessionValue, {
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: SESSION_MAX_AGE_SECONDS,
+    return new Response(JSON.stringify({ success: true, role: user.role }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Set-Cookie': `session=${sessionValue}; Path=/; Max-Age=28800; SameSite=Lax`,
+      },
     });
-    return response;
   } catch (error: any) {
     console.error('Login error:', error);
-    return NextResponse.json({ error: 'Internal server error', details: error?.message }, { status: 500 });
+    return new Response(JSON.stringify({ error: 'Internal server error', details: error?.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

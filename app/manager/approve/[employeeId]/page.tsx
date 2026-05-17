@@ -33,21 +33,16 @@ export default function ApprovalPage({ params }: { params: { employeeId: string 
 
   const handleAction = async (action: 'APPROVE' | 'RETURN') => {
     setSaving(true);
-    
-    if (action === 'APPROVE') {
-      for (const goal of goals) {
-        await fetch('/api/goals', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(goal),
-        });
-      }
-    }
 
     const res = await fetch('/api/goals/approve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ employeeId: params.employeeId, action, managerComment }),
+      body: JSON.stringify({
+        employeeId: params.employeeId,
+        action,
+        managerComment,
+        goals: goals.map(g => ({ id: g.id, target: g.target, weightage: g.weightage })),
+      }),
     });
 
     if (res.ok) {

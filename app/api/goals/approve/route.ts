@@ -10,13 +10,30 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { employeeId, action, managerComment } = await req.json();
+  const { employeeId, action, managerComment, goals: goalUpdates } = await req.json();
   const db = readDb();
 
-  const goals = db.goals.filter(g => g.employeeId === employeeId && g.status === 'SUBMITTED');
+  const targetUser = db.users.find(u => u.id === employeeId);
+  if (!targetUser) return NextResponse.json({ error: 'Employee not found' }, { status: 404 });
+
+  if (session.role === 'MANAGER' && targetUser.managerId !== session.id) {
+    return NextResponse.json({ error: 'You can only approve goals for your direct reports' }, { status: 403 });
+  }
+
+  let goals = db.goals.filter(g => g.employeeId === employeeId && g.status === 'SUBMITTED');
 
   if (goals.length === 0) {
     return NextResponse.json({ error: 'No submitted goals found' }, { status: 400 });
+  }
+
+  if (goalUpdates) {
+    for (const update of goalUpdates) {
+      const idx = db.goals.findIndex(g => g.id === update.id);
+      if (idx === -1) continue;
+      if (update.target !== undefined) db.goals[idx].target = update.target;
+      if (update.weightage !== undefined) db.goals[idx].weightage = parseInt(update.weightage) || 0;
+    }
+    goals = db.goals.filter(g => g.employeeId === employeeId && g.status === 'SUBMITTED');
   }
 
   if (action === 'APPROVE') {

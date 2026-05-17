@@ -45,6 +45,8 @@ export function setSession(user: User) {
   const sessionValue = `${payloadBase64}.${signature}`;
   
   cookies().set('session', sessionValue, {
+    path: '/',
+    httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: SESSION_MAX_AGE_SECONDS

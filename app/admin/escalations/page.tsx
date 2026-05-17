@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function EscalationsPage() {
@@ -8,16 +8,9 @@ export default function EscalationsPage() {
   const [escalations, setEscalations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [triggering, setTriggering] = useState(false);
-  const triggeredRef = useRef(false);
 
   useEffect(() => {
-    if (triggeredRef.current) return;
-    triggeredRef.current = true;
-    fetch('/api/admin/escalations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'trigger' })
-    }).finally(() => fetchData());
+    fetchData();
   }, []);
 
   async function fetchData() {

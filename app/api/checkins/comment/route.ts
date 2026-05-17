@@ -12,6 +12,14 @@ export async function POST(req: Request) {
   const { goalId, quarter, managerComment } = await req.json();
   const db = readDb();
 
+  const goal = db.goals.find(g => g.id === goalId);
+  if (!goal) return NextResponse.json({ error: 'Goal not found' }, { status: 404 });
+
+  const goalOwner = db.users.find(u => u.id === goal.employeeId);
+  if (session.role === 'MANAGER' && goalOwner && goalOwner.managerId !== session.id) {
+    return NextResponse.json({ error: 'You can only comment on your direct reports goals' }, { status: 403 });
+  }
+
   const ciIndex = db.checkIns.findIndex(ci => ci.goalId === goalId && ci.quarter === (quarter as Quarter));
   
   if (ciIndex === -1) {

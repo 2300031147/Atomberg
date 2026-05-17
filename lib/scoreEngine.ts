@@ -1,4 +1,5 @@
 import type { UoMType } from './types';
+import { SCORE_CAP } from './constants';
 
 export function computeScore(uomType: UoMType, target: string, actual: string): number {
   if (uomType === 'ZERO') {
@@ -24,11 +25,11 @@ export function computeScore(uomType: UoMType, target: string, actual: string): 
 
   switch (uomType) {
     case 'NUMERIC_MIN':
-      return Math.min(a / t, 2);
+      return Math.min(a / t, SCORE_CAP);
 
     case 'NUMERIC_MAX':
       if (a === 0) return 1;
-      return Math.min(t / a, 2);
+      return Math.min(t / a, SCORE_CAP);
 
     default: return 0;
   }

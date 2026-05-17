@@ -220,7 +220,7 @@ export default function AdminDashboard() {
                         ))}
                         <td className="px-3 py-3 text-right">
                           <button 
-                            onClick={() => handleUnlock(stats.employeeDetails.find((e: any) => e.name === row.name)?.id)}
+                            onClick={() => handleUnlock(row.id)}
                             className="text-xs font-semibold bg-surface-100 text-surface-500 px-3 py-1.5 rounded-lg hover:bg-red-50 hover:text-red-600 transition-all"
                           >
                             Unlock
