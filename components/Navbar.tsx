@@ -15,7 +15,8 @@ export default function Navbar() {
     const sessionCookie = cookies.find(row => row.startsWith('session='));
     if (sessionCookie) {
       try {
-        const payloadBase64 = sessionCookie.split('=')[1].split('.')[0];
+        const cookieValue = sessionCookie.split('=').slice(1).join('=');
+        const payloadBase64 = cookieValue.split('.')[0];
         const userData = JSON.parse(atob(payloadBase64));
         setUser(userData);
       } catch (e) {

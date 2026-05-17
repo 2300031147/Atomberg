@@ -12,25 +12,12 @@ const CHECKIN_WINDOWS: Record<Quarter, { startMonth: number; endMonth: number }>
 export function isWindowOpen(cycleId: string) {
   const db = readDb();
   const cycle = db.goalCycles.find(c => c.id === cycleId);
-  if (!cycle || !cycle.isActive) return false;
-  
-  const now = new Date();
-  const openDate = new Date(cycle.windowOpen);
-  const closeDate = new Date(cycle.windowClose);
-  
-  return now >= openDate && now <= closeDate;
+  return cycle ? cycle.isActive : false;
 }
 
 export function getActiveCycle() {
   const db = readDb();
-  const now = new Date();
-  
-  return db.goalCycles.find(c => {
-    if (!c.isActive) return false;
-    const openDate = new Date(c.windowOpen);
-    const closeDate = new Date(c.windowClose);
-    return now >= openDate && now <= closeDate;
-  });
+  return db.goalCycles.find(c => c.isActive);
 }
 
 export function getCurrentQuarterCheckinWindow() {
@@ -40,11 +27,9 @@ export function getCurrentQuarterCheckinWindow() {
 }
 
 export function isCheckinWindowOpen(quarter: string): boolean {
-  const now = new Date();
-  const month = now.getMonth() + 1;
-  const window = CHECKIN_WINDOWS[quarter as Quarter];
-  if (!window) return false;
-  return month >= window.startMonth && month <= window.endMonth;
+  const db = readDb();
+  // Allow check-in if any cycle is active (Admin controls this)
+  return db.goalCycles.some(c => c.isActive);
 }
 
 export function isQuarterPast(quarter: string): boolean {
