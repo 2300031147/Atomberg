@@ -8,16 +8,20 @@ export async function POST(req: Request) {
     const { email, password } = await req.json();
     const db = readDb();
     
-    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+    const safeEmail = (email || '').trim().toLowerCase();
+    const safePassword = (password || '').trim();
     
-    const user = db.users.find(u => u.email === email && u.password === hashedPassword);
+    const hashedPassword = crypto.createHash('sha256').update(safePassword).digest('hex');
+    
+    const user = db.users.find(u => u.email.toLowerCase() === safeEmail && u.password === hashedPassword);
     if (!user) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
     
     setSession(user);
     return NextResponse.json({ success: true, role: user.role });
-  } catch {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Login error:', error);
+    return NextResponse.json({ error: 'Internal server error', details: error?.message }, { status: 500 });
   }
 }

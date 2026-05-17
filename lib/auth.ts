@@ -5,7 +5,8 @@ function getSessionSecret(): string {
   const secret = process.env.SESSION_SECRET;
   if (secret) return secret;
   if (process.env.NODE_ENV === 'production') {
-    throw new Error('SESSION_SECRET environment variable is required in production');
+    console.warn('SESSION_SECRET not set. Using auto-generated random secret. Sessions will be invalidated on restart. Set SESSION_SECRET in your environment variables for persistent sessions.');
+    return crypto.randomBytes(32).toString('hex');
   }
   return 'dev-secret-fixed-for-testing';
 }
