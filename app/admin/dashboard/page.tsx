@@ -105,6 +105,7 @@ export default function AdminDashboard() {
             <Link href="/admin/dashboard" className="btn-secondary text-sm py-2 px-4 bg-brand-50 border-brand-200 text-brand-700 hover:bg-brand-100">Overview</Link>
             <Link href="/admin/cycles" className="btn-secondary text-sm py-2 px-4">Cycles</Link>
             <Link href="/admin/shared-goals" className="btn-secondary text-sm py-2 px-4">Shared Goals</Link>
+            <Link href="/admin/users" className="btn-secondary text-sm py-2 px-4">Directory</Link>
             <Link href="/admin/analytics" className="btn-secondary text-sm py-2 px-4">Analytics</Link>
             <Link href="/admin/escalations" className="btn-secondary text-sm py-2 px-4">Escalations</Link>
             <Link href="/admin/notifications" className="btn-secondary text-sm py-2 px-4">Notifications</Link>

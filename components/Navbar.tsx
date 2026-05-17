@@ -47,6 +47,7 @@ export default function Navbar() {
     { href: '/manager/team', label: 'Team', roles: ['MANAGER', 'ADMIN'] },
     { href: '/manager/reports', label: 'Reports', roles: ['MANAGER', 'ADMIN'] },
     { href: '/admin/dashboard', label: 'Governance', roles: ['ADMIN'] },
+    { href: '/admin/users', label: 'Directory', roles: ['ADMIN'] },
     { href: '/admin/analytics', label: 'Analytics', roles: ['ADMIN'] },
     { href: '/admin/escalations', label: 'Escalations', roles: ['ADMIN'] },
   ];
@@ -105,14 +106,23 @@ export default function Navbar() {
           </Link>
 
           <div className="flex items-center gap-3 pl-3 border-l border-surface-200">
-            <div className="text-right hidden sm:block">
-              <div className="text-sm font-semibold text-surface-900 leading-tight">{user.name}</div>
-              <div className="text-[10px] font-bold text-brand-600 uppercase tracking-wider">{user.role}</div>
-            </div>
-            <div className="h-9 w-9 bg-gradient-to-br from-brand-400 to-brand-600 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md shadow-brand-500/20">
-              {user.name?.[0]}
-            </div>
+            <Link href="/profile" className="flex items-center gap-3 group">
+              <div className="text-right hidden sm:block">
+                <div className="text-sm font-semibold text-surface-900 leading-tight group-hover:text-brand-600 transition-colors">{user.name}</div>
+                <div className="text-[10px] font-bold text-brand-600 uppercase tracking-wider">{user.role}</div>
+              </div>
+              <div className="h-9 w-9 bg-gradient-to-br from-brand-400 to-brand-600 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow">
+                {user.name?.[0]}
+              </div>
+            </Link>
           </div>
+
+          <Link href="/profile" className="p-2 text-surface-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-all" title="Settings">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </Link>
 
           <a href="/logout" className="p-2 text-surface-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Sign Out">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
