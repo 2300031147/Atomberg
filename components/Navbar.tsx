@@ -45,6 +45,7 @@ export default function Navbar() {
     { href: '/dashboard', label: 'My Goals', roles: ['EMPLOYEE', 'MANAGER', 'ADMIN'] },
     { href: '/checkins', label: 'Check-ins', roles: ['EMPLOYEE'] },
     { href: '/manager/team', label: 'Team', roles: ['MANAGER', 'ADMIN'] },
+    { href: '/manager/reports', label: 'Reports', roles: ['MANAGER', 'ADMIN'] },
     { href: '/admin/dashboard', label: 'Governance', roles: ['ADMIN'] },
     { href: '/admin/analytics', label: 'Analytics', roles: ['ADMIN'] },
     { href: '/admin/escalations', label: 'Escalations', roles: ['ADMIN'] },
