@@ -77,41 +77,51 @@ export default function ApprovalPage({ params }: { params: { employeeId: string 
       </header>
 
       <div className="space-y-6 mb-8">
-        {goals.map((goal: any) => (
-          <div key={goal.id} className="card p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <span className="badge badge-info mb-2">{goal.thrustArea}</span>
-                <h3 className="text-lg font-bold text-surface-900">{goal.title}</h3>
-              </div>
-              <span className="font-bold bg-surface-100 px-3 py-1 rounded-lg text-surface-700">{goal.weightage}%</span>
+        {goals.length === 0 ? (
+          <div className="card p-12 text-center border border-dashed border-surface-200">
+            <div className="w-16 h-16 bg-surface-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-surface-400"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             </div>
-            <p className="text-surface-500 text-sm mb-6">{goal.description}</p>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-surface-50 p-4 rounded-xl border border-surface-200">
-                <label className="block text-xs font-semibold text-surface-400 mb-2">Adjust Target (Optional)</label>
-                <input 
-                  type="text"
-                  className="input-field text-sm"
-                  value={goal.target}
-                  onChange={(e) => handleUpdateTarget(goal.id, e.target.value)}
-                />
-              </div>
-              <div className="bg-surface-50 p-4 rounded-xl border border-surface-200">
-                <label className="block text-xs font-semibold text-surface-400 mb-2">Adjust Weightage (Optional)</label>
-                <input 
-                  type="number"
-                  min="10"
-                  max="100"
-                  className="input-field text-sm"
-                  value={goal.weightage}
-                  onChange={(e) => handleUpdateWeightage(goal.id, e.target.value)}
-                />
-              </div>
-            </div>
+            <h3 className="text-lg font-bold text-surface-900 mb-1">No Pending Goals</h3>
+            <p className="text-surface-500 text-sm">This employee does not have any goal sheets currently pending manager approval.</p>
           </div>
-        ))}
+        ) : (
+          goals.map((goal: any) => (
+            <div key={goal.id} className="card p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <span className="badge badge-info mb-2">{goal.thrustArea}</span>
+                  <h3 className="text-lg font-bold text-surface-900">{goal.title}</h3>
+                </div>
+                <span className="font-bold bg-surface-100 px-3 py-1 rounded-lg text-surface-700">{goal.weightage}%</span>
+              </div>
+              <p className="text-surface-500 text-sm mb-6">{goal.description}</p>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-surface-50 p-4 rounded-xl border border-surface-200">
+                  <label className="block text-xs font-semibold text-surface-400 mb-2">Adjust Target (Optional)</label>
+                  <input 
+                    type="text"
+                    className="input-field text-sm"
+                    value={goal.target}
+                    onChange={(e) => handleUpdateTarget(goal.id, e.target.value)}
+                  />
+                </div>
+                <div className="bg-surface-50 p-4 rounded-xl border border-surface-200">
+                  <label className="block text-xs font-semibold text-surface-400 mb-2">Adjust Weightage (Optional)</label>
+                  <input 
+                    type="number"
+                    min="10"
+                    max="100"
+                    className="input-field text-sm"
+                    value={goal.weightage}
+                    onChange={(e) => handleUpdateWeightage(goal.id, e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {goals.length > 0 && (
