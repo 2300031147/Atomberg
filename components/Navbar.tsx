@@ -16,7 +16,7 @@ export default function Navbar() {
     if (sessionCookie) {
       try {
         const payloadBase64 = sessionCookie.split('=')[1].split('.')[0];
-        const userData = JSON.parse(atob(decodeURIComponent(payloadBase64)));
+        const userData = JSON.parse(atob(payloadBase64));
         setUser(userData);
       } catch (e) {
         setUser(null);
@@ -53,7 +53,15 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-surface-200/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-2">
+          {pathname !== '/dashboard' && (
+            <button onClick={() => router.back()} className="p-2 text-surface-400 hover:text-surface-900 hover:bg-surface-50 rounded-lg transition-all" title="Go back">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+          )}
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center shadow-md shadow-brand-500/20">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
